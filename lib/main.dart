@@ -10,8 +10,9 @@ FirebaseUser _loggedInUser;
 bool _isLoggedIn = false;
 
 Future<Null> main() async {
+  
   WidgetsFlutterBinding.ensureInitialized();
-
+  
   if (await FirebaseAuth.instance.currentUser() != null) {
     print('LOGGED IN: ' + FirebaseAuth.instance.currentUser().toString());
     _loggedInUser = await FirebaseAuth.instance.currentUser();

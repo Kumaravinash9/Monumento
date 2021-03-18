@@ -85,70 +85,81 @@ class _postsState extends State<posts> {
   //   "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => Navigator.of(context).push(new MaterialPageRoute(
-          builder: (_) => View(widget.data.reference.documentID))),
-      child: Column(
-        children: [
-          ListTile(
-            trailing: Text("20:30 pm"),
-            title: Text(
-              widget.data.data['name'],
-              style: TextStyle(fontSize: 15),
-            ),
-            subtitle: Row(
+    return FutureBuilder(
+        future: Firestore.instance
+            .collection("users")
+            .document(widget.data.data['auth_id'])
+            .get(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return SizedBox();
+          return InkWell(
+            onTap: () => Navigator.of(context).push(new MaterialPageRoute(
+                builder: (_) => View(widget.data.reference.documentID))),
+            child: Column(
               children: [
-                Icon(
-                  Icons.location_on,
-                  size: 15.0,
-                  color: Colors.amber,
+                ListTile(
+                  trailing: Text("20:30 pm"),
+                  title: Text(
+                    snapshot.data['name'],
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  subtitle: Row(
+                    children: [
+                      Icon(
+                        Icons.location_on,
+                        size: 15.0,
+                        color: Colors.amber,
+                      ),
+                      Text(widget.data.data['location']),
+                    ],
+                  ),
+                  leading: CircleAvatar(
+                    backgroundImage: snapshot.data['prof_pic'] != ''
+                        ? NetworkImage(
+                            snapshot.data['prof_pic'],
+                          )
+                        : AssetImage('assets/explore.jpg'),
+                    radius: 30,
+                  ),
                 ),
-                Text(widget.data.data['location']),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
+                  child: Text(
+                      widget.data.data['title'].substring(0, 100) + "....",
+                      style:
+                          TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.network(
+                    widget.data.data['url'],
+                    width: double.infinity,
+                    height: 250,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Expanded(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        row(Icons.favorite, "Like", Colors.red),
+                        row(Icons.comment, "comment", Colors.blue[200]),
+                        row(Icons.share, "share", Colors.amber)
+                      ],
+                    ),
+                  ),
+                ),
+                Divider(
+                  thickness: 10,
+                )
               ],
             ),
-            leading: CircleAvatar(
-              backgroundImage: widget.data.data['prof_pic'] != ''
-                  ? NetworkImage(
-                      widget.data.data['prof_pic'],
-                    )
-                  : AssetImage('assets/explore.jpg'),
-              radius: 30,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
-            child: Text(widget.data.data['title'].substring(0, 100) + "....",
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.network(
-              widget.data.data['url'],
-              width: double.infinity,
-              height: 250,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  row(Icons.favorite, "Like", Colors.red),
-                  row(Icons.comment, "comment", Colors.blue[200]),
-                  row(Icons.share, "share", Colors.amber)
-                ],
-              ),
-            ),
-          ),
-          Divider(
-            thickness: 10,
-          )
-        ],
-      ),
-    );
+          );
+        });
 
     /*InkWell(
       onTap: () => Navigator.of(context)

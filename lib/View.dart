@@ -315,75 +315,6 @@ class _ViewState extends State<View> {
     });
   }
 
-  Widget Comment(AsyncSnapshot<dynamic> snapshot) {
-    return Container(
-      width: 500,
-      child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 2),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 15.0, right: 10),
-                child: CircleAvatar(
-                  backgroundImage: snapshot.data['prof_pic'] != ''
-                      ? NetworkImage(
-                          snapshot.data['prof_pic'],
-                        )
-                      : AssetImage('assets/explore.jpg'),
-                  radius: 20,
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 18.0, right: 10),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              snapshot.data['name'],
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                            Text("3 days ago", style: TextStyle(fontSize: 9))
-                          ],
-                        ),
-                        Text(snapshot.data['comment_msg'],
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 8,
-                            style: TextStyle(
-                                fontSize: 11, fontWeight: FontWeight.w500)),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            IconButton(
-                                icon: Icon(
-                                  Icons.favorite,
-                                  color: Colors.red,
-                                  size: 20,
-                                ),
-                                onPressed: null),
-                            FlatButton(
-                                onPressed: () => openKeyboard(),
-                                child: Text("Reply",
-                                    style: TextStyle(
-                                        color: Colors.blue[300], fontSize: 11)))
-                          ],
-                        ),
-                      ]),
-                ),
-              ),
-            ],
-          )),
-    );
-  }
-
   String title =
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.";
   @override
@@ -438,43 +369,110 @@ class _ViewState extends State<View> {
                         child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        ListTile(
-                          trailing: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "20:30 pm",
-                                style: TextStyle(fontSize: 10),
-                              ),
-                              Text('20-10-2020', style: TextStyle(fontSize: 10))
-                            ],
-                          ),
-                          title: Text(
-                            snapshot.data['name'],
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.w600),
-                          ),
-                          subtitle: Row(children: [
-                            Icon(
-                              Icons.location_on,
-                              size: 10.0,
-                              color: Colors.amber,
-                            ),
-                            Text(
-                              snapshot.data['location'],
-                              style: TextStyle(fontSize: 11),
-                            ),
-                          ]),
-                          leading: CircleAvatar(
-                            backgroundImage: snapshot.data['prof_pic'] != ''
-                                ? NetworkImage(
-                                    snapshot.data['prof_pic'],
-                                  )
-                                : AssetImage('assets/explore.jpg'),
-                            radius: 23,
-                          ),
-                        ),
+                        FutureBuilder(
+                            future: Firestore.instance
+                                .collection("users")
+                                .document(uid)
+                                .get(),
+                            builder: (context, snapshoty) {
+                              if (!snapshoty.hasData)
+                                return Shimmer.fromColors(
+                                    baseColor: Colors.grey[300],
+                                    highlightColor: Colors.grey[100],
+                                    child: ListTile(
+                                      trailing: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Shimmer.fromColors(
+                                              direction: ShimmerDirection.rtl,
+                                              baseColor: Colors.grey[300],
+                                              highlightColor: Colors.grey[300],
+                                              child: Text(
+                                                "20:30 pm",
+                                                style: TextStyle(
+                                                    fontSize: 10,
+                                                    color: Colors.white),
+                                              )),
+                                          Shimmer.fromColors(
+                                              baseColor: Colors.grey[300],
+                                              highlightColor: Colors.grey[300],
+                                              child: Text('20-10-2020',
+                                                  style: TextStyle(
+                                                      fontSize: 10,
+                                                      color: Colors.white)))
+                                        ],
+                                      ),
+                                      title: Shimmer.fromColors(
+                                          baseColor: Colors.grey[300],
+                                          highlightColor: Colors.grey[300],
+                                          child: Text(
+                                            "Avinash kumar",
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.white),
+                                          )),
+                                      subtitle: Row(children: [
+                                        Icon(
+                                          Icons.location_on,
+                                          size: 10.0,
+                                          color: Colors.amber,
+                                        ),
+                                        Text(
+                                          "paris",
+                                          style: TextStyle(fontSize: 11),
+                                        ),
+                                      ]),
+                                      leading: CircleAvatar(
+                                        backgroundImage:
+                                            AssetImage('assets/explore.jpg'),
+                                        radius: 23,
+                                      ),
+                                    ));
+                              return ListTile(
+                                trailing: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "20:30 pm",
+                                      style: TextStyle(fontSize: 10),
+                                    ),
+                                    Text('20-10-2020',
+                                        style: TextStyle(fontSize: 10))
+                                  ],
+                                ),
+                                title: Text(
+                                  snapshoty.data['name'],
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                subtitle: Row(children: [
+                                  Icon(
+                                    Icons.location_on,
+                                    size: 10.0,
+                                    color: Colors.amber,
+                                  ),
+                                  Text(
+                                    snapshot.data['location'],
+                                    style: TextStyle(fontSize: 11),
+                                  ),
+                                ]),
+                                leading: CircleAvatar(
+                                  backgroundImage:
+                                      snapshoty.data['prof_pic'] != ''
+                                          ? NetworkImage(
+                                              snapshoty.data['prof_pic'],
+                                            )
+                                          : AssetImage('assets/explore.jpg'),
+                                  radius: 23,
+                                ),
+                              );
+                            }),
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10.0, vertical: 5),
@@ -538,7 +536,7 @@ class _ViewState extends State<View> {
                                   .map<Widget>((element) {
                             // get index
 
-                            return StreamBuilder(
+                            return /*StreamBuilder(
                                 stream: Firestore.instance
                                     .collection("comments")
                                     .document(element['comment_id'])
@@ -551,8 +549,10 @@ class _ViewState extends State<View> {
                                     return Center(
                                         child: CircularProgressIndicator());
                                   print(commentsnapshot.data);
-                                  return Comment(commentsnapshot);
-                                });
+                                  return Comment(
+                                      commentsnapshot, openKeyboard, uid);
+                                });*/
+                                CommentstateFul(element, openKeyboard, uid);
                           }).toList())
                       ],
                     )),
@@ -599,8 +599,6 @@ class _ViewState extends State<View> {
                                         .document();
 
                                     docReference.setData({
-                                      "name": name,
-                                      "prof_pic": prof_pic,
                                       "timestamp": Timestamp.now(),
                                       "auth_id": uid,
                                       "comment_msg": _textController.text,
@@ -663,4 +661,124 @@ Widget row(IconData _icon, String text, Color _color) {
       Text(text)
     ],
   );
+}
+
+Widget Comment(
+    AsyncSnapshot<dynamic> snapshot, Function openKeyboard, String uid) {
+  return Container(
+    width: 500,
+    child: Column(
+      children: [
+        FutureBuilder(
+            future: Firestore.instance.collection("users").document(uid).get(),
+            builder: (context, snapshoty) {
+              if (!snapshoty.hasData) return SizedBox();
+              return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15.0, vertical: 0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15.0, right: 10),
+                        child: CircleAvatar(
+                          backgroundImage: snapshoty.data['prof_pic'] != ''
+                              ? NetworkImage(
+                                  snapshoty.data['prof_pic'],
+                                )
+                              : AssetImage('assets/explore.jpg'),
+                          radius: 20,
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 18.0, right: 10),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      snapshoty.data['name'],
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    Text("3 days ago",
+                                        style: TextStyle(fontSize: 9))
+                                  ],
+                                ),
+                                Text(snapshot.data['comment_msg'],
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 8,
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w500)),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    IconButton(
+                                        icon: Icon(
+                                          Icons.favorite,
+                                          color: Colors.red,
+                                          size: 20,
+                                        ),
+                                        onPressed: null),
+                                    FlatButton(
+                                        onPressed: () => openKeyboard(),
+                                        child: Text("Reply",
+                                            style: TextStyle(
+                                                color: Colors.blue[300],
+                                                fontSize: 11)))
+                                  ],
+                                ),
+                              ]),
+                        ),
+                      ),
+                    ],
+                  ));
+            }),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 60.0, vertical: 0),
+          child: Divider(
+            thickness: 1,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+class CommentstateFul extends StatefulWidget {
+  final element;
+  final openKeyboard;
+  final uid;
+  CommentstateFul(this.element, this.openKeyboard, this.uid);
+
+  @override
+  _CommentstateFulState createState() => _CommentstateFulState();
+}
+
+class _CommentstateFulState extends State<CommentstateFul> {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+        stream: Firestore.instance
+            .collection("comments")
+            .document(widget.element['comment_id'])
+            .snapshots(),
+        builder: (context, commentsnapshot) {
+          print(widget.element['comment_id']);
+
+          if (commentsnapshot.connectionState == ConnectionState.waiting)
+            return Center(child: CircularProgressIndicator());
+          print(commentsnapshot.data);
+          return Comment(commentsnapshot, widget.openKeyboard, widget.uid);
+        });
+  }
 }
