@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "838564181125",
+    "project_id": "monumneto",
+    "storage_bucket": "monumneto.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:838564181125:android:8e446f971213632196e5ec",
+        "android_client_info": {
+          "package_name": "com.example.monumento"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "838564181125-a5p8uo7a7pnqqi9strmsg2q2olj68q36.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhJVhvRaLlFKCBQ_f-oBdl9j8yH8yNlMY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "838564181125-a5p8uo7a7pnqqi9strmsg2q2olj68q36.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
