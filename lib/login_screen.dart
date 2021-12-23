@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:monumento/home_screen.dart';
-import 'package:monumento/register_screen.dart';
+import 'package:newDemoApp/forgetPassword.dart';
+import 'package:newDemoApp/home_screen.dart';
+import 'package:newDemoApp/register_screen.dart';
 import 'constants.dart';
-import 'For_Password.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -79,15 +79,15 @@ class _LoginScreenState extends State<LoginScreen> {
     map["email"] = _emailController.text.trim();
     map["password"] = _passwordController.text.trim();
 
-    DocumentReference documentReference =
-        Firestore.instance.collection(collection).document();
-    Firestore.instance.runTransaction((transaction) async {
-      await transaction.set(documentReference, map).catchError((e) {
-        return false;
-      }).whenComplete(() {
-        print('User Created!');
-        return true;
-      });
+    await Firestore.instance
+        .collection(collection)
+        .document(user.uid)
+        .setData(map)
+        .catchError((e) {
+      return false;
+    }).whenComplete(() {
+      print('User Created!');
+      return true;
     }).catchError((e) {
       print(e.toString());
       return false;
@@ -185,12 +185,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return Container(
       alignment: Alignment.centerRight,
       child: FlatButton(
-        onPressed: () async {
-          print('Forgot Password Button Pressed');
-          //await forgetPassword(context);
-          Navigator.of(context)
-              .push(new MaterialPageRoute(builder: (_) => ForgetPassword()));
-        },
+        onPressed: () => Navigator.push(
+            context, MaterialPageRoute(builder: (context) => ForgetPassword())),
         padding: EdgeInsets.only(right: 0.0),
         child: Text(
           'Forgot Password?',
